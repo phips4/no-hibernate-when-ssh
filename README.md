@@ -1,12 +1,10 @@
 # no-hibernate-when-ssh
-Prevent your linux (ubuntu) machine from hibernating if there are SSH connections 
-and asks to enable battery life mode.
+Prevent your linux (with gnome) from hibernating when logged in with SSH
 
-The following command adds logic to your .zshrc and .zsh_logout files to disable 
-hibernate mode when SSH connections are open and reactivates it when all SSH 
-sessions are closed.
+The following command adds a new script to your SSHD [pam](http://www.linux-pam.org/) file which handles the
+preventing and reactivating functionalities.
 
-**disclaimer: currently work in progress**
+**currently work in progress**
 
 ## installation
 
@@ -14,11 +12,11 @@ sessions are closed.
 wget -O - https://raw.githubusercontent.com/phips4/no-hibernate-when-ssh/master/install.sh | sh
 ```
 ## todo list
-- [x] download and link script files to .bashrc and .bash_logout
+- [x] switched from .bashrc / .bash_logout to [pam](http://www.linux-pam.org/)
+- [x] download and link script files
 - [x] provide an installation 
-- [ ] disable hibernate mode on ssh activity
+- [x] disable hibernate mode on ssh activity
 - [ ] enable hibernate mode when all ssh sessions are closed
-- [ ] move files into own directory (~/no-hibernate-when-ssh/)
-- [ ] ask for used shell (bash, zsh, ...)
+- [x] move files into own directory (/etc/no-hibernate-when-ssh/)
 - [ ] verify checksums on file download
 - [ ] provide a way to check if no hibernate is active

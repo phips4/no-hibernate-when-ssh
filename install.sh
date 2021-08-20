@@ -1,11 +1,11 @@
 #!/bin/bash
 
-readonly ENABLE_FILE="enable_hibernate_mode.sh"
-readonly DISABLE_FILE="disable_hibernate_mode.sh"
-readonly ASK_FILE="ask.sh"
-readonly ENABLE_FILE_REMOTE="https://raw.githubusercontent.com/phips4/no-hibernate-when-ssh/master/enable-hibernate.sh"
-readonly DISABLE_FILE_REMOTE="https://raw.githubusercontent.com/phips4/no-hibernate-when-ssh/master/disable-hibernate.sh"
-readonly ASK_FILE_REMOTE="https://raw.githubusercontent.com/phips4/no-hibernate-when-ssh/master/ask.sh"
+readonly DIRECTORY='/etc/no-hibernate-when-ssh/'
+readonly SCRIPT_FILE='pam_ssh_no_hibernate.sh'
+readonly PAM_SSHD_FILE='/etc/pam.d/sshd'
+readonly ASK_FILE='ask.sh'
+readonly SCRIPT_FILE_REMOTE='https://raw.githubusercontent.com/phips4/no-hibernate-when-ssh/master/pam_ssh_no_hibernate.sh'
+readonly ASK_FILE_REMOTE='https://raw.githubusercontent.com/phips4/no-hibernate-when-ssh/master/ask.sh'
 
 # command_name
 check_cmd () {
@@ -23,17 +23,15 @@ download () {
   #TODO: verify checksum
 }
 
-# file_to_start, file
-link_file () {
-  START_SCRIPT="/bin/bash ./$1"
-  grep -qxF "$START_SCRIPT" "$2" || echo "$START_SCRIPT" >> "$2"
-  echo "linked $1 to $2"
-}
+check_cmd wget
+check_cmd system76-power
+check_cmd xset
 
-check_cmd "wget"
-check_cmd "xset"
-download $ENABLE_FILE $ENABLE_FILE_REMOTE
-download $DISABLE_FILE $DISABLE_FILE_REMOTE
-download $ASK_FILE $ASK_FILE_REMOTE
-link_file $ENABLE_FILE "$HOME/.bashrc"
-link_file $DISABLE_FILE "$HOME/.bash_logout"
+mkdir $DIRECTORY
+download $SCRIPT_FILE $SCRIPT_FILE_REMOTE
+download ASK_FILE $ASK_FILE_REMOTE
+chmod a+x "$DIRECTORY/$SCRIPT_FILE"
+chmod a+x "$DIRECTORY/$ASK_FILE"
+
+echo '# no-hibernate-when-ssh' >> $PAM_SSHD_FILE
+echo "session     optional    pam_exec.so quiet $DIRECTORY/$SCRIPT_FILE" >> $PAM_SSHD_FILE
