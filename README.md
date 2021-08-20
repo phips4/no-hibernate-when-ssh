@@ -9,7 +9,7 @@ preventing and reactivating functionalities.
 ## installation
 
 ```sh
-wget -O - https://raw.githubusercontent.com/phips4/no-hibernate-when-ssh/master/install.sh | sudo sh
+wget https://raw.githubusercontent.com/phips4/no-hibernate-when-ssh/master/install.sh && sudo bash ./install.sh && rm ./install.sh
 ```
 ## todo list
 - [x] switched from .bashrc / .bash_logout to [pam](http://www.linux-pam.org/)
